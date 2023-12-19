@@ -1,6 +1,6 @@
 {{block "controls" . }}
   <control-buttons>
-    <button id="decrease">Consumir</button>
-    <button id="increase">Farofa</button>
+    <button hx-post="/decrease" id="decrease">Lazer</button>
+    <button hx-post="/increase" id="increase">Produzir</button>
   </control-buttons>
 {{ end }}

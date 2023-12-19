@@ -14,13 +14,26 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
+type Timing struct {
+	Start time.Duration
+	Stop time.Duration
+}
+
+type PageIndex struct {
+	timings Timing[]
+}
+
+var timings []Timing
+
 func main() {
-	templates, err := template.ParseGlob("templates/*.html");
+	timings = make([]Timing, 0)
+	templates, err := template.ParseGlob("templates/*.html")
+
 	if err != nil {
 		log.Fatalf("Failed: %s", err)
 	}
 
-	e := echo.New();
+	e := echo.New()
 
 	e.Renderer = &TemplateRenderer{
 		templates: templates,
@@ -28,9 +41,13 @@ func main() {
 
 	e.Use(middleware.Logger())
 
-	e.Static("/dist", "./dist");
+	e.Static("/dist", "./dist")
 
 	e.GET("/", func(c echo.Context) error {
+		return c.Render(200, "index.html", nil)
+	})
+
+	e.POST("/timing", func(c echo.Context) error {
 		return c.Render(200, "index.html", nil)
 	})
 

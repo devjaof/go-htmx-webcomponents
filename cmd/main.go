@@ -47,7 +47,11 @@ func main() {
 		return c.Render(200, "index.html", nil)
 	})
 
-	e.POST("/timing", func(c echo.Context) error {
+	e.POST("/increase", func(c echo.Context) error {
+		return c.Render(200, "index.html", nil)
+	})
+
+	e.POST("/decrease", func(c echo.Context) error {
 		return c.Render(200, "index.html", nil)
 	})
 

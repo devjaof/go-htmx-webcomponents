@@ -1,24 +1,49 @@
 export class ControlButtons extends HTMLElement {
-  private swapOnClick(element: HTMLButtonElement, buttonName: string) {
+  public decrease: HTMLButtonElement;
+
+  public increase: HTMLButtonElement;
+
+  constructor() {
+    super();
+    this.decrease = this.querySelector("#decrease") as HTMLButtonElement;
+    this.increase = this.querySelector("#increase") as HTMLButtonElement;
+  }
+
+  private handleDisableButton (buttonName: string) {
+    if (buttonName == 'Lazer') {
+      this.increase.disabled = !this.increase.disabled;
+    }
+
+    if (buttonName === 'Produzir') {
+        this.decrease.disabled = !this.decrease.disabled;
+    }
+  }
+
+  private swapOnClick (
+    element: HTMLButtonElement,
+    buttonName: string,
+  ) {
+    const that = this;
+
     element.addEventListener("click",function() {
       if (this.innerText !== "Parar") {
         this.innerText = "Parar";
       } else {
         this.innerText = buttonName;
       }
+      
+      that.handleDisableButton(buttonName);
     })
+
   }
   
   connectedCallback() {
-    const decrease = this.querySelector("#decrease") as HTMLButtonElement;
-    const increase = this.querySelector("#increase") as HTMLButtonElement;
-
-    if (!decrease || !increase) {
+    if (!this.decrease || !this.increase) {
       return;
     }
 
-    this.swapOnClick(decrease, "Lazer");
-    this.swapOnClick(increase, "Produzir");
+    this.swapOnClick(this.decrease, "Lazer");
+    this.swapOnClick(this.increase, "Produzir");
   }
 }
 

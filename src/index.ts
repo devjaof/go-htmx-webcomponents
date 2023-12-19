@@ -1,15 +1,12 @@
 import {LitElement, css, html} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 
-@customElement('simple-greeting')
-export class SimpleGreeting extends LitElement {
+@customElement('control-buttons')
+export class ControlButtons extends LitElement {
   static styles = css`p {color: blue}`;
 
-  @property()
-  name = 'Somebody';
-
   render() {
-    return html`<p>Hello ${this.name}!</p>`;
+    return html`<slot></slot>`;
   }
 }
 

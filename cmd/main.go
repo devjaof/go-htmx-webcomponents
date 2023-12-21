@@ -1,6 +1,7 @@
 package main
 
 import "log"
+import "time"
 import "io"
 import "html/template"
 import "github.com/labstack/echo/v4"
@@ -20,7 +21,7 @@ type Timing struct {
 }
 
 type PageIndex struct {
-	timings Timing[]
+	timings []Timing
 }
 
 var timings []Timing

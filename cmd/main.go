@@ -16,18 +16,22 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 }
 
 type Timing struct {
-	Start time.Duration
-	Stop time.Duration
+  Type string
+	Start time.Time
+	Stop time.Time
 }
 
 type PageIndex struct {
-	timings []Timing
+	Timings []Timing
 }
 
 var timings []Timing
+var timingType string
 
 func main() {
 	timings = make([]Timing, 0)
+  timingType = ""
+
 	templates, err := template.ParseGlob("templates/*.html")
 
 	if err != nil {
@@ -45,15 +49,41 @@ func main() {
 	e.Static("/dist", "./dist")
 
 	e.GET("/", func(c echo.Context) error {
-		return c.Render(200, "index.html", nil)
+    return c.Render(200, "index.html", PageIndex{Timings: timings})
 	})
 
 	e.POST("/increase", func(c echo.Context) error {
-		return c.Render(200, "index.html", nil)
+    log.Print("increase")
+
+    if timingType != "" {
+      timings[len(timings)-1].Stop = time.Now()
+    }
+
+    timingType = "increase"
+    timings = append(timings, Timing{Type: "increase", Start: time.Now()})
+  
+    log.Print(timings)
+
+    return c.Render(200, "timings.html", PageIndex{Timings: timings})
 	})
 
 	e.POST("/decrease", func(c echo.Context) error {
-		return c.Render(200, "index.html", nil)
+    if timingType != "" {
+      timings[len(timings)-1].Stop = time.Now()
+    }
+
+    timingType = "decrease"
+    timings = append(timings, Timing{Type: "decrease", Start: time.Now()})
+
+    return c.Render(200, "timings.html", PageIndex{Timings: timings})
+	})
+
+
+	e.POST("/clear", func(c echo.Context) error {
+    timingType = ""
+    timings = make([]Timing, 0)
+
+    return c.Render(200, "timings.html", PageIndex{Timings: timings})
 	})
 
 	e.Logger.Fatal(e.Start(":42069"))

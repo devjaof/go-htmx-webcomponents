@@ -1,0 +1,28 @@
+{{ block "timings" . }}
+  <div id="list" class="m-2 flex flex-col overflow-y-auto">
+    {{ range .Timings }}
+      {{ template "timing" . }}
+    {{ else }}
+      Você ainda não tem nada registrado.
+    {{ end }}
+  </div>
+{{ end }}
+
+
+{{ block "timing" . }}
+  <div class="p-2 border-b-gray-200 odd:bg-gray-200">
+      {{if eq .Type "increase"}}
+        <p class="float-end">Tipo: <span class="text-blue-500">Produzir</span></p>
+      {{else}}
+        <p class="float-end">Tipo: <span class="text-yellow-500">Lazer</span></p>
+      {{end}}
+
+    <p>Inicio: {{ .Start.Format "15:04:05" }}</p>
+
+    {{if (not .Stop.IsZero)}}
+      <p>Fim: {{ .Stop.Format "15:04:05" }}</p>
+
+      <p class="text-gray-600">Duração: {{ ((.Stop.Sub .Start).Round 1000000000).String }}</p>
+    {{end}}
+  </div>
+{{ end }}

@@ -1,6 +1,33 @@
 {{block "controls" . }}
-  <control-buttons>
-    <button hx-post="/decrease" id="decrease">Lazer</button>
-    <button hx-post="/increase" id="increase">Produzir</button>
+  <control-buttons class="m-4 float-end">
+    <button
+      hx-target="body"
+      hx-post="/decrease"
+      hx-swap="outerhtml"
+      id="decrease"
+      class="bg-yellow-500 hover:bg-yellow-700 text-white py-1 px-3 rounded"
+    >
+      Lazer
+    </button>
+
+    <button
+      hx-target="body"
+      hx-swap="outerhtml"
+      hx-post="/increase"
+      id="increase"
+      class="bg-blue-500 hover:bg-blue-700 text-white py-1 px-3 rounded"
+    >
+      Produzir
+    </button>
+
+    <button
+      hx-swap="outerhtml"
+      hx-target="body"
+      hx-post="/clear"
+      id="clear"
+      class="bg-slate-500 hover:bg-slate-700 text-white py-1 px-3 rounded"
+    >
+      Limpar
+    </button>
   </control-buttons>
 {{ end }}

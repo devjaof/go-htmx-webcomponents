@@ -19,18 +19,22 @@ type Timing struct {
   Type string
 	Start time.Time
 	Stop time.Time
+  Id int
 }
 
 type PageIndex struct {
 	Timings []Timing
+  TotalTime time.Duration
 }
 
 var timings []Timing
 var timingType string
+var id int
 
 func main() {
 	timings = make([]Timing, 0)
   timingType = ""
+  id  = 0
 
 	templates, err := template.ParseGlob("templates/*.html")
 
@@ -53,29 +57,17 @@ func main() {
 	})
 
 	e.POST("/increase", func(c echo.Context) error {
-    log.Print("increase")
+    addTiming("increase")
+    data := getPageData()
 
-    if timingType != "" {
-      timings[len(timings)-1].Stop = time.Now()
-    }
-
-    timingType = "increase"
-    timings = append(timings, Timing{Type: "increase", Start: time.Now()})
-  
-    log.Print(timings)
-
-    return c.Render(200, "timings.html", PageIndex{Timings: timings})
+    return c.Render(200, "index.html", data)
 	})
 
 	e.POST("/decrease", func(c echo.Context) error {
-    if timingType != "" {
-      timings[len(timings)-1].Stop = time.Now()
-    }
+    addTiming("decrease")
+    data := getPageData()
 
-    timingType = "decrease"
-    timings = append(timings, Timing{Type: "decrease", Start: time.Now()})
-
-    return c.Render(200, "timings.html", PageIndex{Timings: timings})
+    return c.Render(200, "index.html", data)
 	})
 
 
@@ -83,8 +75,43 @@ func main() {
     timingType = ""
     timings = make([]Timing, 0)
 
-    return c.Render(200, "timings.html", PageIndex{Timings: timings})
+    return c.Render(200, "index.html", PageIndex{Timings: timings})
 	})
 
 	e.Logger.Fatal(e.Start(":42069"))
+}
+
+func incrementId() {
+  id += 1
+}
+
+func addTiming(t string) {
+  if timingType != "" {
+    timings[len(timings)-1].Stop = time.Now()
+  }
+
+  if timingType == t {
+    timingType = ""
+    return
+  }
+
+  timingType = t
+  timings = append(timings, Timing{Type: t, Start: time.Now(), Id: id})
+  incrementId()
+}
+
+func getPageData() PageIndex {
+  var totalTime time.Duration = 0
+
+  for _, timing := range timings {
+    if !timing.Start.IsZero() && !timing.Stop.IsZero() {
+      if timing.Type == "increase" {
+        totalTime += timing.Stop.Sub(timing.Start)
+      } else {
+        totalTime -= timing.Stop.Sub(timing.Start)
+      }
+    }
+  }
+
+  return PageIndex{Timings: timings, TotalTime: totalTime}
 }

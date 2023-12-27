@@ -14,7 +14,7 @@ export class ControlButtons extends HTMLElement {
       this.increase.disabled = !this.increase.disabled;
     }
 
-    if (buttonName === 'Produzir') {
+    if (buttonName == 'Produzir') {
         this.decrease.disabled = !this.decrease.disabled;
     }
   }
@@ -24,19 +24,18 @@ export class ControlButtons extends HTMLElement {
     buttonName: string,
   ) {
     const that = this;
-
     element.addEventListener("click",function() {
-      if (this.innerText !== "Parar") {
-        this.innerText = "Parar";
-      } else {
+      if (this.innerText === "Parar") {
         this.innerText = buttonName;
+      } else {
+        this.innerText = "Parar";
       }
-      
+
       that.handleDisableButton(buttonName);
     })
 
   }
-  
+
   connectedCallback() {
     if (!this.decrease || !this.increase) {
       return;

@@ -1,13 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title></title>
+    <title>Seu tempo</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="dist/output.css" rel="stylesheet"/>
     <script type="module" src="/dist/bundle.js"></script>
     <script src="https://unpkg.com/htmx.org@1.9.9" integrity="sha384-QFjmbokDn2DjBjq+fM+8LUIVrAgqcNW2s0PjAxHETgRn9l4fvX31ZxDxvwQnyMOX" crossorigin="anonymous"></script>
   </head>
   <body>
-    {{ template "controls" . }}
+    <main>
+      {{ template "totals" . }}
+      {{ template "timings" . }}
+      {{ template "controls" . }}
+    </main>
   </body>
 </html>

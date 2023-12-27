@@ -1,0 +1,3 @@
+{{block "totals" . }}
+  <h3 class="m-2">Tempo total: {{ (.TotalTime.Round 1000000000).String }}</h3>
+{{end}}
